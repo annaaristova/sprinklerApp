@@ -1,0 +1,151 @@
+/*Home page*/
+
+body, header, main, footer {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+#container{
+    font-family:'Times New Roman', Times, serif;
+}
+
+header{
+    background-color: #a1c6ea;
+    width: auto;
+    height: 100px;
+    text-align: center;
+}
+
+header h1{
+    padding-top: 30px;
+    font-size: 30px;
+}
+
+main{
+    background-color:white;
+    width: auto;
+}
+
+#timeTagWrapper{
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 900px;
+    margin-top: 60px;
+    margin-left: 150px;
+}
+
+.addTimeLabel{
+    font-size: 19px;
+    margin-right: 8px;
+}
+
+.addTimeType{
+    border-color:#a1c6ea;
+    background-color: ghostwhite;
+    border-radius: 5px;
+    cursor: pointer;
+    border: solid;
+    border-width: 1.5px;
+    margin-right: 13px;
+    height: 2em;
+}
+
+#addDurationType{
+    width: 100px;
+    text-align: center;
+}
+
+#addTimeType{
+    width: 130px;
+    text-align: center;
+}
+
+#submitTime{
+    float: right;
+    display: block;
+    width: 80px;
+    border-color: #1d3461;
+    border: solid;
+    cursor: pointer;
+    background-color: ghostwhite;
+    border-radius: 5px;
+    border-width: 1.5px;
+    height: 31px;
+    font-size: 14px;
+    margin-left: 8px;
+}
+
+.deleteButton{
+    display: block;
+    width: 20px;
+    border: none;
+    cursor: pointer;
+    height: 20px;
+    background-color: transparent;
+    padding-left: 75px;
+}
+
+.deleteButton:hover{
+    width: 23px;
+    height: 23px;
+}
+
+#submitTime:hover, .addTimeType:hover{
+    background-color:#ddecf8;
+}
+
+#timeTable{
+    display: block;
+    margin-top: 60px;
+    margin-left: 200px;
+    width: 1000px;
+    border-collapse: collapse;
+}
+
+#timeTable th{
+    text-align: center;
+    background-color: #b0d2ed;
+    font-size: 19px;
+}
+
+#timeTable tr{
+    font-size: 18px;
+    text-align: center;
+    padding-top: 13px;
+    padding-bottom: 13px;
+}
+
+#timeTable th{
+    height: 60px;
+}
+
+#timeTable tr {
+    height: 45px;
+}
+
+#timeTable tr, #timeTable th{
+    padding-left: 60px;
+    padding-right: 60px;
+}
+
+#timeTable tr:nth-child(odd){
+    background-color: #dbe8f2;
+}
+
+#timeTable tr:hover{
+    background-color: #afc6d4;
+}
+
+footer{
+    width: auto;
+    height: 80px;
+    background-color: #507dbc;
+    text-align: center;
+}
+
+footer p{
+    font-size: 20px;
+    padding-top: 25px;
+}

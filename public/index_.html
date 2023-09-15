@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Sprinkler App</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="styles/styles.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    </head>
+    <body>
+
+        <div id="container">
+            <header>
+                <h1>Sprinkler Timetable</h1>
+            </header>
+
+            <main>
+                <div id="timeTagWrapper">
+                        <form action="/add_time_to_table" id="addNewRow">
+                            <label for="addTime" class="addTimeLabel">Add Time:</label>
+                            <input type="time" class="addTimeType" name="addTimeType" id="addTimeType">
+                            <label for="addDuration" class="addTimeLabel">Add Duration in Seconds:</label>
+                            <input type="number" class="addTimeType" name="addDurationType" id="addDurationType">
+                            <input type="submit" id="submitTime">
+                        </form>
+                    </div>
+                </div>
+                
+                <script>
+
+                    // Attach a submit handler to the form
+                    $ ( "#addNewRow" ).on( "submit", function() {
+
+                        // Stop form from submitting normally
+                        event.preventDefault();
+
+                        // Get some values from elements on the page:
+                        var $timeData = $(this),
+                        time = $timeData.find( "input[type='time']" ).val()
+                        duration = $timeData.find( "input[type='number']" ).val()
+                        url = $timeData.attr( "action" );
+
+                        // Send the data using post
+                        $.post( url, { time : time, duration : duration}, 
+                            function(data, status, jqXHR){
+                            if (data == "success") {
+                                alert(data + ', time: ' + time);
+                                var tableRef = document.getElementById("timeTable");
+                                var newRow = tableRef.insertRow(-1);
+                                var idCell = newRow.insertCell(0);
+                                var timeCell = newRow.insertCell(1);
+                                var durationCell = newRow.insertCell(2);
+                                var toggleSwitchCell = newRow.insertCell(3);
+                                var deleteCell = newRow.insertCell(4);
+
+                                const deleteButton = "<button type='submit' id='deleteButton'>" +
+                                                    "<img src='images/delete.png' alt='Delete' height='20' width='20'>" +
+                                                    "</button>";
+                                const toggleSwitch = "<label class='switch'>" +
+                                                        "<input type='checkbox'>" +
+                                                        "<span class='slider round'></span>" +
+                                                    "</label>";
+
+                                timeCell.innerHTML = time;
+                                durationCell.innerHTML = duration;
+                                deleteCell.innerHTML = deleteButton;
+                                toggleSwitchCell.innerHTML = toggleSwitch;
+
+                            }
+                            else {
+                                alert("An Error Occurred");
+                            }
+                        });
+    
+                    });
+                </script>
+
+                <div id="tableContainer">
+                    <table id="timeTable">
+                        <tr id="tableHead">
+                            <th>#</th>
+                            <th>Time</th>
+                            <th>Duration</th>
+                            <th>Turn on/off</th>
+                            <th>Delete</th>
+                        </tr>
+                        <tr id="tableBody">
+      
+                        </tr>
+                    </table>     
+                </div>
+
+            </main>
+
+            <footer>
+                <p>Copyright</p>
+            </footer>
+        </div>
+
+    </body>
+</html>
