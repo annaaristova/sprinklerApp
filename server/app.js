@@ -33,7 +33,7 @@ app.post('/delete_row', function (request, response) {
   var insertQuery = "DELETE FROM schedule WHERE id=(?)";
 
   scheduleDB.run(insertQuery, id, function(err) {
-    if (err) {
+    if (err){
       return console.log(err.message);
     }
     console.log(id);
@@ -57,6 +57,26 @@ app.get('/', function (request, response) {
     response.render( 'index', { timeAndDuration : timeAndDuration });
   });
 });
+
+setInterval(checkTime, 10000);
+
+function checkTime(){
+  var checkTimeQuery = "SELECT time, duration FROM schedule WHERE time=(?)";
+  var date = new Date();
+  var curTime = date.getHours() + ":" + date.getMinutes();
+  scheduleDB.get(checkTimeQuery, curTime, function(err, row){
+    console.log(curTime);
+    if (err) {
+      console.log(err.message);
+    }
+    else {
+      if (row) {
+        console.log("test2");
+        console.log(`Time ${row.time} was found. The duration is ${row.duration} seconds`);
+      }
+    } 
+  });
+};
 
 app.listen(8000);
 
