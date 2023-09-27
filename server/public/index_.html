@@ -43,9 +43,7 @@
                         // Send the data using post
                         $.post( url, { time : time, duration : duration}, 
                             function(data, status, jqXHR){
-                            if (data == "success") {
-                                alert(data + ', time: ' + time);
-                                var tableRef = document.getElementById("timeTable");
+                            if (data == "success") {                                var tableRef = document.getElementById("timeTable");
                                 var newRow = tableRef.insertRow(-1);
                                 var idCell = newRow.insertCell(0);
                                 var timeCell = newRow.insertCell(1);

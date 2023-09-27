@@ -12,7 +12,7 @@ ${BIN}.hex: ${BIN}.elf
 	${OBJCOPY} -O ihex -R .eeprom $< $@
 
 ${BIN}.elf: ${OBJS}
-	${CC} -o $@ $^
+	${CC} -mmcu=${MCU} -o $@ $^
 
 install: ${BIN}.hex
 	avrdude -c arduino -p ${MCU} -P ${PORT} -b 57600 -U flash:w:$<

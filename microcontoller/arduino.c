@@ -2,7 +2,7 @@
 
 #define BAUD_RATE 9600
 
-void UART_Init(unsigned long baudRate){
+void UART_Init(long int baudRate){
 
   //set UCSR0A register bits to 0
   UCSR0A = 0x00; 
@@ -25,14 +25,11 @@ void UART_Init(unsigned long baudRate){
 int main(){
 
   DDRB |= (1 << 5);
-  PORTB |= (1 << 5);
-  //UART_Init(BAUD_RATE); 
+  UART_Init(BAUD_RATE); 
 
   while(1){
-    /*
     //Check if the byte was received 
-    if ((UCSR0A & RXC0) == RXC0){
-    
+    if ((UCSR0A & (1 << RXC0)) == (1 << RXC0)){
     //read from the buffer
       char readByte = UDR0;
       if (readByte == '1'){
@@ -44,7 +41,7 @@ int main(){
       else if (readByte == '2') {
         PORTB ^= (1 << 5);
       }
-    }*/
+    }
   }
   return 0;
 }

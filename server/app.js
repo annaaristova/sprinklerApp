@@ -1,21 +1,27 @@
-var express = require('express');
-var app = express();
-var sqlite3 = require('sqlite3');
 
-//setting middleware
-app.use(express.static(__dirname + '/public')); //Serves resources from public folder
+var express = require('express'); //import the Express.js framework
+var app = express();  //create an instance of the Express application
+var sqlite3 = require('sqlite3'); //import the sqlite3 module
+
+/*setting middleware*/
+//configure Express to parse URL-encoded data from incoming requests 
 app.use(express.urlencoded({ extended: true }));
+//configure Express to serve static files (such as HTML, CSS, JavaScript, images, etc.) 
+//from the "public" folder
+app.use(express.static(__dirname + '/public')); 
 
 app.set('view engine', 'ejs');
 
+//create a new SQLite database object named scheduleDB and opens the SQLite database file located at "db/schedule.db"
+//It initializes a connection to this database
 var scheduleDB = new sqlite3.Database("db/schedule.db");
 
-scheduleDB.run("CREATE TABLE IF NOT EXISTS 'schedule' (id INTEGER PRIMARY KEY, time STRING, duration INTEGER)");
+scheduleDB.run("CREATE TABLE IF NOT EXISTS 'schedule' (id INTEGER PRIMARY KEY, time TEXT, duration INTEGER)");
 
 app.post('/add_time_to_table', function (request, response) {
   var time = request.body.time;
   var duration = request.body.duration;
-  var insertQuery = "INSERT INTO schedule (time, duration) VALUES (?, ?)";
+  var insertQuery = "INSERT INTO schedule (time, duration) VALUES (strftime('%H:%M', (?)), (?))";
   var valuesArray = [time, duration];
   
   scheduleDB.run(insertQuery, valuesArray, function(err) {
@@ -65,19 +71,18 @@ function checkTime(){
   var date = new Date();
   var curTime = date.getHours() + ":" + date.getMinutes();
   scheduleDB.get(checkTimeQuery, curTime, function(err, row){
-    console.log(curTime);
     if (err) {
       console.log(err.message);
     }
     else {
       if (row) {
-        console.log("test2");
         console.log(`Time ${row.time} was found. The duration is ${row.duration} seconds`);
       }
     } 
   });
 };
 
+//instruct the Express application to listen for incoming HTTP requests on port 8000 
 app.listen(8000);
 
 //scheduleDB.close();
