@@ -45,7 +45,6 @@ app.post('/delete_row', function (request, response) {
     if (err){
       return console.log(err.message);
     }
-    console.log(id);
   });
 
   response.send(id);
@@ -62,7 +61,6 @@ app.get('/', function (request, response) {
       }  
       timeAndDuration.push({"index": row.id, "time": row.time, "duration": row.duration});
     });
-    console.log(timeAndDuration);
     response.render( 'index', { timeAndDuration : timeAndDuration });
   });
 });
@@ -86,7 +84,7 @@ function checkTime(){
         const buf = Buffer.allocUnsafe(2);
         buf.writeUInt8(msb, 0);
         buf.writeUInt8(lsb, 1);
-        console.log(buf);
+        console.log("The time is " + row.time + " The sprinkle will water the plants for " + duration + "milliseconds");
         
         fs.writeFile('serial_port', buf, err => {
           if (err) {

@@ -64,27 +64,20 @@
                             $.post( url, { time : time, duration : duration}, 
                                 function(data, status, jqXHR){
                                 if (status == "success") {
-                                    alert("ID: " + typeof data);
                                     var tableRef = document.getElementById("timeTable");
                                     var newRow = tableRef.insertRow(-1);
                                     var timeCell = newRow.insertCell(0);
                                     var durationCell = newRow.insertCell(1);
-                                    var toggleSwitchCell = newRow.insertCell(2);
-                                    var deleteCell = newRow.insertCell(3);
+                                    var deleteCell = newRow.insertCell(2);
 
                                     var imgIdFirstPart = "buttonId-";
                                     var imgId = imgIdFirstPart.concat(data);
 
                                     const deleteButton = "<img src='images/delete.png' alt='Delete' class='deleteButton' id='" + imgId + "'>";
-                                    const toggleSwitch = "<label class='switch'>" +
-                                                            "<input type='checkbox'>" +
-                                                            "<span class='slider round'></span>" +
-                                                        "</label>";
                                     
                                     timeCell.innerHTML = time;
                                     durationCell.innerHTML = duration;
                                     deleteCell.innerHTML = deleteButton;
-                                    toggleSwitchCell.innerHTML = toggleSwitch;
 
                                     $("#" + imgId).on("click", deleteButtonOnClick);
                                 }
@@ -107,7 +100,6 @@
                         <tr>
                             <th>Time</th>
                             <th>Duration</th>
-                            <th>Turn on/off</th>
                             <th>Delete</th>
                         </tr>
                         <% timeAndDuration.forEach(function (item, i) {%>
