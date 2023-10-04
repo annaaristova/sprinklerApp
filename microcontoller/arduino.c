@@ -1,4 +1,5 @@
 #include <avr/io.h>
+#include <util/delay.h>
 
 #define BAUD_RATE 9600
 
@@ -28,20 +29,30 @@ int main(){
   UART_Init(BAUD_RATE); 
 
   while(1){
-    //Check if the byte was received 
-    if ((UCSR0A & (1 << RXC0)) == (1 << RXC0)){
-    //read from the buffer
-      char readByte = UDR0;
-      if (readByte == '1'){
-        PORTB |= (1 << 5);
-      } 
-      else if (readByte == '0') {
-        PORTB &= ~(1 << 5);
-      }
-      else if (readByte == '2') {
-        PORTB ^= (1 << 5);
-      }
+    //wait for the first byte
+    while((UCSR0A & (1 << RXC0)) != (1 << RXC0));
+    //read less significant byte from the buffer
+    int lsb = UDR0; 
+
+    //use delay to wait for the second byte
+    _delay_ms(50);
+
+    //if the second byte is not received during the 50-millisecond delay,
+    //dismiss the first byte and return to the beginning of the loop
+    if((UCSR0A & (1 << RXC0)) != (1 << RXC0)){
+      continue;
+    };
+    //read most significant byte from the buffer
+    int msb = UDR0; 
+    
+    //recreate the number
+    unsigned int duration = msb << 8 | lsb;
+
+    PORTB |= (1 << 5);
+    for (int i=0; i < duration; i++){
+      _delay_ms(1);
     }
+    PORTB &= ~(1 << 5);
   }
   return 0;
 }

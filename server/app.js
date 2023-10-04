@@ -2,6 +2,7 @@
 var express = require('express'); //import the Express.js framework
 var app = express();  //create an instance of the Express application
 var sqlite3 = require('sqlite3'); //import the sqlite3 module
+var fs = require('fs');
 
 /*setting middleware*/
 //configure Express to parse URL-encoded data from incoming requests 
@@ -34,11 +35,13 @@ app.post('/add_time_to_table', function (request, response) {
 });
 
 app.post('/delete_row', function (request, response) {
+  //retrieves the value of the 'id' field that needs to be deleted from the request body  
   var id = request.body.id;
 
-  var insertQuery = "DELETE FROM schedule WHERE id=(?)";
+  //SQL query to delete a row from the 'schedule' table
+  var deleteQuery = "DELETE FROM schedule WHERE id=(?)";
 
-  scheduleDB.run(insertQuery, id, function(err) {
+  scheduleDB.run(deleteQuery, id, function(err) {
     if (err){
       return console.log(err.message);
     }
@@ -76,14 +79,27 @@ function checkTime(){
     }
     else {
       if (row) {
-        console.log(`Time ${row.time} was found. The duration is ${row.duration} seconds`);
+        var duration = parseInt(row.duration);
+        var msb = duration >> 8;
+        var lsb = duration & 0xFF;
+
+        const buf = Buffer.allocUnsafe(2);
+        buf.writeUInt8(msb, 0);
+        buf.writeUInt8(lsb, 1);
+        console.log(buf);
+        
+        fs.writeFile('serial_port', buf, err => {
+          if (err) {
+            console.error(err);
+          }
+        });
       }
     } 
   });
 };
 
+
 //instruct the Express application to listen for incoming HTTP requests on port 8000 
 app.listen(8000);
 
 //scheduleDB.close();
-
