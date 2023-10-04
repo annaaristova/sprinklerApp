@@ -15,10 +15,11 @@ header{
     width: auto;
     height: 100px;
     text-align: center;
+    padding-top: 1px;
 }
 
 header h1{
-    padding-top: 30px;
+    padding-top: 10px;
     font-size: 30px;
 }
 
@@ -31,9 +32,8 @@ main{
     display: flex;
     flex-wrap: nowrap;
     justify-content: space-between;
-    width: 900px;
     margin-top: 60px;
-    margin-left: 150px;
+    margin-left: 275px;
 }
 
 .addTimeLabel{
@@ -65,16 +65,17 @@ main{
 #submitTime{
     float: right;
     display: block;
-    width: 80px;
+    width: 90px;
     border-color: #1d3461;
     border: solid;
     cursor: pointer;
     background-color: ghostwhite;
     border-radius: 5px;
     border-width: 1.5px;
-    height: 31px;
-    font-size: 14px;
+    font-size: 15px;
     margin-left: 8px;
+    padding-bottom: 6px;
+    padding-top: 6px;    
 }
 
 .deleteButton{
@@ -84,7 +85,7 @@ main{
     cursor: pointer;
     height: 20px;
     background-color: transparent;
-    padding-left: 75px;
+    padding-left: 110px;
 }
 
 .deleteButton:hover{
@@ -98,10 +99,10 @@ main{
 
 #timeTable{
     display: block;
-    margin-top: 100px;
-    margin-left: 200px;
-    width: 1000px;
+    margin-top: 7%;
+    margin-left: 260px;
     border-collapse: collapse;
+    margin-bottom: 135px;
 }
 
 #timeTable th{
@@ -126,8 +127,8 @@ main{
 }
 
 #timeTable tr, #timeTable th{
-    padding-left: 60px;
-    padding-right: 60px;
+    padding-left: 95px;
+    padding-right: 95px;
 }
 
 #timeTable tr:nth-child(odd){
@@ -143,6 +144,7 @@ footer{
     height: 80px;
     background-color: #507dbc;
     text-align: center;
+    padding-bottom: 4px;
 }
 
 footer p{
