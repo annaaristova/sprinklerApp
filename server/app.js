@@ -65,7 +65,7 @@ app.get('/', function (request, response) {
   });
 });
 
-setInterval(checkTime, 10000);
+setInterval(checkTime, 60000);
 
 function checkTime(){
   var checkTimeQuery = "SELECT time, duration FROM schedule WHERE time=(?)";

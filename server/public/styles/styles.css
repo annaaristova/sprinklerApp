@@ -80,7 +80,7 @@ main{
 
 .deleteButton{
     display: block;
-    width: 20px;
+    width: 20px; 
     border: none;
     cursor: pointer;
     height: 20px;

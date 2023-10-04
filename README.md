@@ -96,6 +96,52 @@ Index.ejs file presents the copy of my index.html file with the modified table w
 ```
 
 
+
+```
+// Attach a submit handler to the form
+$( document ).ready(function(){
+    $ ( "#addNewRow" ).on( "submit", function() {
+
+        // Stop form from submitting normally
+        event.preventDefault();
+
+        // Get some values from elements on the page:
+        var $addNewRowForm = $(this),
+        time = $addNewRowForm.find( "input[type='time']" ).val()
+        duration = $addNewRowForm.find( "input[type='number']" ).val()
+        url = "/add_time_to_table";
+
+        // Send the data using post
+        $.post( url, { time : time, duration : duration}, 
+            function(data, status, jqXHR){
+            if (status == "success") {
+                var tableRef = document.getElementById("timeTable");
+                var newRow = tableRef.insertRow(-1);
+                var timeCell = newRow.insertCell(0);
+                var durationCell = newRow.insertCell(1);
+                var deleteCell = newRow.insertCell(2);
+
+                var imgIdFirstPart = "buttonId-";
+                var imgId = imgIdFirstPart.concat(data);
+
+                const deleteButton = "<img src='images/delete.png' alt='Delete' class='deleteButton' id='" + imgId + "'>";
+                
+                timeCell.innerHTML = time;
+                durationCell.innerHTML = duration;
+                deleteCell.innerHTML = deleteButton;
+
+                $("#" + imgId).on("click", deleteButtonOnClick);
+            }
+            else {
+                alert("An Error Occurred");
+            }
+        });
+    });
+});
+```
+
+
+
 ```
 app.post('/add_time_to_table', function (request, response) {
   var time = request.body.time;
@@ -113,7 +159,15 @@ app.post('/add_time_to_table', function (request, response) {
 });
 ```
 
+When the user clicks the delete button the onclick even is called. Since a page can't be manipulated safely until the page DOM is ready I used $(document).ready(function()) so the onclick event can be executed once the page is uploaded. Once the user clicks the delete button on click event is triggered deleteButtonOnClick() is called.
 
+```
+// Attach a delete handler to the form
+  $(document).ready(function(){
+      $(".deleteButton").on("click", deleteButtonOnClick);
+  });
+```
+Inside deleteButtonOnClick() function I wrap the clicked button in a jQuery object and then retrieve the database row id which is located inside the delete image id ```<img src="images/delete.png" alt="Delete" class="deleteButton" id="buttonId-<%=item.index%>">```. After retrieving the row id I send POST request. If the request was successful I the response was received I use JQuery method to find the closest to the delete button <tr> tag and then remove it.  
 
 ```
 var deleteButtonOnClick = function() {
@@ -150,86 +204,59 @@ app.post('/delete_row', function (request, response) {
     if (err){
       return console.log(err.message);
     }
-    console.log(id);
   });
-
   response.send(id);
 });
 ```
 
 To execute DELETE statement I use the run() method inside the callback function. Here, it executes the SQL DELETE query. It provides the 'id' as the value to replace the placeholder (?) in the query. The callback function checks if there was an error during the execution of the DELETE query.
 
+The program should check the time in the database every minute. If the time is in the database the watering duration should be split into 2 bytes and written into serial_port file which then send these bytes to microcontroller via bloototh. 
 
+To check the time every minute I use setInterval() method which calls checkTime() function every 60 seconds.
 
+Inside the checkTime() function I create the Date object with the current time. Since the time insid the database is store in HH:MM format I call getHours() and getMinutes() method inside curTime variable.After that I use curTime to inside the SELECT query to find the corresponding time inside the database. 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-First, I created a web interface where the user can set up the time and timer for the sprinkler. 
-
-Web interface:
-1. Developing the web interface with HTML and CSS
-2. Applying ejs template to make a responsive web interface 
-
-Server-side settings:
-1. Building of the Node js server 
-2. Creating a docker container
-
-Technologies Used:
-Node js
-Express js
-Docker containers
-SQLite database
-
-
-
-# server 
-I created a linux container for my app. Containers can be used in different environments, it is easier to implement changes when you have an image with all the settings and it by looking at the image I can easily remember all the steps I need to do to set up a container for my app. 
-
-Inside my project folder I created a dockerfile which presents the image of the container. 
-
-img!
-
-To create a container image for my my Node js app I followed the steps mentioned on Node js official website:
-https://nodejs.org/en/docs/guides/nodejs-docker-webapp
+If the row with the searching time was found I get the duration value and then split it into 2 bytes which will be send to the microcontroller. To send these bytes I create serial_port file and write those bytes in it. 
 
 ```
-# Use an official Node.js runtime as the base image
-FROM node:18
+setInterval(checkTime, 10000);
 
-# Set the working directory in the container
-WORKDIR ~
+function checkTime(){
+  var checkTimeQuery = "SELECT time, duration FROM schedule WHERE time=(?)";
+  var date = new Date();
+  var curTime = date.getHours() + ":" + date.getMinutes();
+  scheduleDB.get(checkTimeQuery, curTime, function(err, row){
+    if (err) {
+      console.log(err.message);
+    }
+    else {
+      if (row) {
+        var duration = parseInt(row.duration);
+        var msb = duration >> 8;
+        var lsb = duration & 0xFF;
 
-# Copy package.json and package-lock.json to the container
-COPY package*.json ./
-
-# Install application dependencies
-RUN npm install
-
-# Copy the application code into the container
-COPY server ./
-
-EXPOSE 8000
-# Specify the command to run your application
-CMD ["node", "app.js"]
+        const buf = Buffer.allocUnsafe(2);
+        buf.writeUInt8(msb, 0);
+        buf.writeUInt8(lsb, 1);
+        console.log("The time is " + row.time + " The sprinkle will water the plants for " + duration + "milliseconds");
+        
+        fs.writeFile('serial_port', buf, err => {
+          if (err) {
+            console.error(err);
+          }
+        });
+      }
+    } 
+  });
+};
 ```
 
-After I created the image I used shell commands to built the image and than run it.
 
-```
-docker build -t sprinkle-app .
-docker run -p 8000:8000 -it sprinkle-app
-```
+
+
+
+
+
 
 
