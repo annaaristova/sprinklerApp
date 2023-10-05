@@ -94,8 +94,11 @@ Index.ejs file presents the copy of my index.html file with the modified table w
     </table>     
 </div>
 ```
+When the user clicks the submit button to add time and duration to the database the submit even is called. Since a page can't be manipulated safely until the page DOM is ready I used $(document).ready(function()) so the submit event can be executed once the page is uploaded. Once the user clicks the submit button the function will be executed. 
 
+Before I send the time and duration inside the POST request to ```/add_time_to_table``` url I need to retrieve these values. To do that I wrap the HTML form in a jQuery object and then search for the values in it. After the values are found the POST request can be sent. If the request is successful the new row will be added to the HTML table with the time and duration values along with the delete button. I retrieve id from the POST response body and add this value to the id attribute inside the delete button.
 
+To make it possible to delete just added row without reloading the web-page the delete button is assigned a click event handler (deleteButtonOnClick) for deleting rows.
 
 ```
 // Attach a submit handler to the form
@@ -139,8 +142,11 @@ $( document ).ready(function(){
     });
 });
 ```
+To handle a POST request to add a new row to the database table I use app.post() routing. The application “listens” for requests that match the /add_time_to_table' route, and when it detects a match, it calls a callback function.
 
+Inside the callback function I retrieve time and duration from the request body and run the INSERT query with these values to add new row to the database. 
 
+Since I will need add the row id to the HTML table so I can easily detect the row I need to delete from the database, I send the row id inside the POST response.  
 
 ```
 app.post('/add_time_to_table', function (request, response) {
@@ -251,7 +257,36 @@ function checkTime(){
   });
 };
 ```
+To make it easy to put new versions of software and run the code in different environments I decided to create a Linux container with my Node js app.
 
+First I created a docker file inside my app folder.
+
+![Alt text](image.png)
+
+To run the docker I firstly created its image. I followed the example which I found on the official Node js website: https://nodejs.org/en/docs/guides/nodejs-docker-webapp. 
+
+```# Use an official Node.js runtime as the base image
+FROM node:18
+
+# Set the working directory in the container
+WORKDIR /root
+
+# Copy package.json and package-lock.json to the container
+COPY package*.json ./
+
+# Install application dependencies
+RUN npm install
+
+# Copy the application code into the container
+COPY server ./
+
+EXPOSE 8000
+# Specify the command to run your application
+CMD ["node", "app.js"]```
+
+After 
+
+#docker run -p 8000:8000 -e TZ=America/Los_Angeles -v C:\Users\Anna\Documents\sprinklerApp\serial_port:/root/serial_port  -v C:\Users\Anna\Documents\sprinklerApp\server\db\schedule.db:/root/db/schedule.db -it sprinkle-app
 
 
 
