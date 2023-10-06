@@ -84,7 +84,7 @@ function checkTime(){
         const buf = Buffer.allocUnsafe(2);
         buf.writeUInt8(msb, 0);
         buf.writeUInt8(lsb, 1);
-        console.log("The time is " + row.time + " The sprinkle will water the plants for " + duration + "milliseconds");
+        console.log("The time is " + row.time + " The sprinkler will water the plants for " + duration + " milliseconds");
         
         fs.writeFile('serial_port', buf, err => {
           if (err) {

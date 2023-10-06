@@ -33,7 +33,7 @@ main{
     flex-wrap: nowrap;
     justify-content: space-between;
     margin-top: 60px;
-    margin-left: 275px;
+    margin-left: 22%;
 }
 
 .addTimeLabel{
@@ -100,7 +100,7 @@ main{
 #timeTable{
     display: block;
     margin-top: 7%;
-    margin-left: 260px;
+    margin-left: 21%;
     border-collapse: collapse;
     margin-bottom: 135px;
 }
