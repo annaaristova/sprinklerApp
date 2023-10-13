@@ -75,7 +75,7 @@ app.get('/', function (request, response) {
 });
 
 // Check the data in the database every minute
-setInterval(checkTime, 10000);
+setInterval(checkTime, 60000);
 
 function checkTime(){
   var checkTimeQuery = "SELECT time, duration FROM schedule WHERE time=(?)";
