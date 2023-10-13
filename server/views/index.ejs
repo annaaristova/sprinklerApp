@@ -30,14 +30,16 @@
 
                     var deleteButtonOnClick = function() {
                             
-                        // Get some values from elements on the page:
+                        // Get the id value from the clicked delete button
                         var deleteRowBtn = $(this);
                         var id = $(this).attr("id").slice(9);
 
-                        // Send the data using post
+                        // Send the data using POST request
                         $.post("/delete_row", {id : id}, 
                             function(data, status, jqXHR){
                             if (data == id) {
+
+                                // Remove the closest to the delete button <tr> tag   
                                 $(deleteRowBtn).closest("tr").remove();
                             }
                             
@@ -48,22 +50,26 @@
                     };
 
                     // Attach a submit handler to the form
+
+                    // Wait until the page DOM is uploaded
                     $( document ).ready(function(){
                         $ ( "#addNewRow" ).on( "submit", function() {
 
                             // Stop form from submitting normally
                             event.preventDefault();
 
-                            // Get some values from elements on the page:
+                            // Retrieve time and duration from the form
                             var $addNewRowForm = $(this),
                             time = $addNewRowForm.find( "input[type='time']" ).val()
                             duration = $addNewRowForm.find( "input[type='number']" ).val()
                             url = "/add_time_to_table";
 
-                            // Send the data using post
+                            // Send the data using POST request
                             $.post( url, { time : time, duration : duration}, 
                                 function(data, status, jqXHR){
                                 if (status == "success") {
+
+                                    // Add a new row 
                                     var tableRef = document.getElementById("timeTable");
                                     var newRow = tableRef.insertRow(-1);
                                     var timeCell = newRow.insertCell(0);
@@ -71,14 +77,20 @@
                                     var deleteCell = newRow.insertCell(2);
 
                                     var imgIdFirstPart = "buttonId-";
+
+                                    // Retrieve the row id from the POST response body
                                     var imgId = imgIdFirstPart.concat(data);
 
+                                    // Add the row id to the id attribute 
                                     const deleteButton = "<img src='images/delete.png' alt='Delete' class='deleteButton' id='" + imgId + "'>";
                                     
+                                    // Add time and duration values along with the delete button to the table
                                     timeCell.innerHTML = time;
                                     durationCell.innerHTML = duration;
                                     deleteCell.innerHTML = deleteButton;
 
+                                    // To make it possible to delete just added row without reloading the web-page 
+                                    // the delete button is assigned a click event handler
                                     $("#" + imgId).on("click", deleteButtonOnClick);
                                 }
                                 else {
@@ -89,12 +101,13 @@
                     });
 
                     // Attach a delete handler to the form
+                    // Wait until the page DOM is uploaded
                     $(document).ready(function(){
                         $(".deleteButton").on("click", deleteButtonOnClick);
                     });
 
                 </script>
-
+                
                 <div id="tableContainer">
                     <table id="timeTable">
                         <tr>
@@ -117,7 +130,7 @@
             </main>
 
             <footer>
-                <p>Copyright</p>
+                <p>Sprinkle App</p>
             </footer>
         </div>
 

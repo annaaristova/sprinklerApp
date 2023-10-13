@@ -42,9 +42,10 @@ Link to Arduino Nano: https://www.amazon.com/dp/B07R9VWD39
 
 To work with the Arduino Nano, I needed a specific Bluetooth module with a UART module to send signals to the Arduino Nano via the UART protocol.
 
-### Link to Bluetooth to UART converter: https://www.amazon.com/dp/B01G9KSAF6
+Link to Bluetooth to UART converter: https://www.amazon.com/dp/B01G9KSAF6
 
-Bluetooth Adapter
+### Bluetooth Adapter
+
 To send signals from the server over Bluetooth I used a Bluetooth Adapter. The server connects to the Bluetooth Adapter via USB.
 
 Link to Bluetooth Adapter: https://www.amazon.com/dp/B07V1SZCY6
