@@ -117,6 +117,31 @@ function checkTime(){
   });
 };
 
+setInterval(powerbankActivate, 5000);
+
+function powerbankActivate(){
+  var sendSignal = 5000;
+
+  // Split the duration into two bytes
+  var msb = sendSignal >> 8;
+  var lsb = sendSignal & 0xFF;
+
+  // Create a buffer to store binary data 
+  const buf = Buffer.allocUnsafe(2);
+
+  // Add binary data into the buffer
+  buf.writeUInt8(lsb, 0);
+  buf.writeUInt8(msb, 1);
+
+  console.log(buf);
+  // Write 2 bytes into the file
+  fs.writeFile('serial_port', buf, err => {
+    if (err) {
+      console.error(err);
+    }
+  });
+}
+
 
 //instruct the Express application to listen for incoming HTTP requests on port 8000 
 app.listen(8000);
