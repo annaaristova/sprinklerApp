@@ -21,13 +21,14 @@
                             <input type="time" class="addTimeType" name="addTimeType" id="addTimeType">
                             <label for="addDuration" class="addTimeLabel">Add Duration in Milliseconds:</label>
                             <input type="number" class="addTimeType" name="addDurationType" id="addDurationType">
-                            <input type="submit" id="submitTime">
+                            <input type="submit" value="Submit" id="submitTime">
                         </form>
                     </div>
                 </div>
 
                 <div id="startSprinkler">
-                    <label for="startSprinkler" id="startBtnLb">Run the sprinkler for 10 seconds</label>
+                    <label for="startSprinkler" id="startBtnLb">Run the sprinkler for:</label>
+                    <input type="number" class="runSprinkler">
                     <button id="startBtn">Start</button> 
                 </div>
                 
@@ -35,7 +36,10 @@
 
                     $(document).ready(function(){
                         $("#startBtn").on("click", function(){
-                            $.post("/start_sprinkler", function(data){
+
+                            var startSprinkler = $(this).parent("#startSprinkler");
+                            duration = $(startSprinkler).find( "input[type='number']" ).val()
+                            $.post("/start_sprinkler", {duration : duration}, function(data){
                                 alert(data);
                             });
                         });
@@ -59,7 +63,7 @@
                             if (data == id) {
 
                                 // Remove the closest to the delete button <tr> tag   
-                                $(deleteRowBtn).closest("tr").remove();
+                                    $(deleteRowBtn).closest("tr").remove();
                             }
                             
                             else {
@@ -78,9 +82,8 @@
                             event.preventDefault();
 
                             // Retrieve time and duration from the form
-                            var $addNewRowForm = $(this),
-                            time = $addNewRowForm.find( "input[type='time']" ).val()
-                            duration = $addNewRowForm.find( "input[type='number']" ).val()
+                            time = $(this).find( "input[type='time']" ).val()
+                            duration = $(this).find( "input[type='number']" ).val()
                             url = "/add_time_to_table";
 
                             if (time == "" || duration== ""){
@@ -125,7 +128,7 @@
                     });
 
                     $(document).ready(function() {
-                        $("tbody").each(function(elem,index){
+                        $("tbody").each(function(){
                         var arr = $.makeArray($("tr",this).detach());
                         arr.reverse();
                         $(this).append(arr);

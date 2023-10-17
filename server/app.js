@@ -17,7 +17,7 @@ app.set('view engine', 'ejs');
 var scheduleDB = new sqlite3.Database("db/schedule.db");
 
 // Check if the database exists, if not it create a new one
-scheduleDB.run("CREATE TABLE IF NOT EXISTS 'schedule' (id INTEGER PRIMARY KEY, time TEXT, duration INTEGER, lastRunTime INTEGER, runToday TEXT)");
+scheduleDB.run("CREATE TABLE IF NOT EXISTS 'schedule' (id INTEGER PRIMARY KEY, time TEXT, duration INTEGER, lastRunTime INTEGER)");
 
 app.post('/add_time_to_table', function (request, response) {
 
@@ -76,8 +76,53 @@ app.get('/', function (request, response) {
 
 app.post('/start_sprinkler', function (request, response) {
   
-  var duration = 10000;
+  var duration = request.body.duration;
+  console.log(duration);
 
+  sendSignal(duration);
+
+  response.send("The sprinkler is running");
+});
+
+// Check the data in the database every minute
+setInterval(checkTime, 5000);
+
+function checkTime(){
+  var checkTimeQuery = "SELECT time, duration, lastRunTime, id FROM schedule WHERE time=(?)";
+  var addLastRunTime = "UPDATE schedule SET lastRunTime=(?) WHERE id=(?)";
+
+  // Get the current time
+  var date = new Date();
+  var curTime = ('0'+ date.getHours()).slice(-2) + ":" + ('0'+ date.getMinutes()).slice(-2);
+  var day = date.getDate();
+
+  // Check if the current time matches any time in the database
+  scheduleDB.get(checkTimeQuery, curTime, function(err, row){
+    if (err) {
+      console.log(err.message);
+    }
+    else {
+      if (row) {
+        if (row.lastRunTime != day){
+          
+          var insertData = [day, row.id];
+
+          var duration = parseInt(row.duration);
+
+          sendSignal(duration);
+
+          scheduleDB.run(addLastRunTime, insertData, function(err) {
+            if (err){
+              return console.log(err.message);
+            }
+          });
+        }
+      }
+    } 
+  });
+};
+
+function sendSignal(duration){
   // Split the duration into two bytes
   var msb = duration >> 8;
   var lsb = duration & 0xFF;
@@ -97,64 +142,7 @@ app.post('/start_sprinkler', function (request, response) {
       console.error(err);
     }
   });
-
-  response.send("The sprinkler is running");
-});
-
-// Check the data in the database every minute
-setInterval(checkTime, 5000);
-
-function checkTime(){
-  var checkTimeQuery = "SELECT time, duration, lastRunTime, runToday FROM schedule WHERE time=(?)";
-  var addLastRunTime = "UPDATE schedule SET lastRunTime=(?), runToday='done' WHERE time=(?)";
-
-  // Get the current time
-  var date = new Date();
-  var curTime = date.getHours() + ":" + ('0'+ date.getMinutes()).slice(-2);
-  var day = date.getDate();
-
-  // Check if the current time matches any time in the database
-  scheduleDB.get(checkTimeQuery, curTime, function(err, row){
-    if (err) {
-      console.log(err.message);
-    }
-    else {
-      if (row) {
-        if (row.lastRunTime != day || row.runToday != "done"){
-
-          var insertData = [day, curTime];
-          
-          scheduleDB.run(addLastRunTime, insertData, function(err) {
-            if (err){
-              return console.log(err.message);
-            }
-            var duration = parseInt(row.duration);
-
-            // Split the duration into two bytes
-            var msb = duration >> 8;
-            var lsb = duration & 0xFF;
-
-            // Create a buffer to store binary data 
-            const buf = Buffer.allocUnsafe(2);
-
-            // Add binary data into the buffer
-            buf.writeUInt8(lsb, 0);
-            buf.writeUInt8(msb, 1);
-
-            console.log("The time is " + row.time + " The sprinkler will water the plants for " + duration + " milliseconds");
-            
-            // Write 2 bytes into the file
-            fs.writeFile('serial_port', buf, err => {
-              if (err) {
-                console.error(err);
-              }
-            });
-          });
-        }
-      }
-    } 
-  });
-};
+}
 
 //instruct the Express application to listen for incoming HTTP requests on port 8000 
 app.listen(8000);

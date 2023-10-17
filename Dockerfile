@@ -17,5 +17,3 @@ COPY server ./
 EXPOSE 8000
 # Specify the command to run your application
 CMD ["node", "app.js"]
-
-#docker run -p 8000:8000 -e TZ=America/Los_Angeles -v C:\Users\Anna\Documents\sprinklerApp\serial_port:/root/serial_port  -v C:\Users\Anna\Documents\sprinklerApp\server\db\schedule.db:/root/db/schedule.db -it sprinkle-app

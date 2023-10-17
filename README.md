@@ -60,5 +60,12 @@ To simplify the process of adding or deleting watering schedules, I created a we
 
 To simplify the installation of new dependencies or running the program in different environments, I created a Docker container. The `serial_port` file is bound to the virtual serial_port device outside of the container. When the container starts, the content of the `serial_port` file is forwarded to the Bluetooth Adapter.
 
+```
+docker run -p 8000:8000 -e TZ=America/Los_Angeles -v ${pwd}/serial_port:/root/serial_port  -v ${pwd}/server/db/schedule.db:/root/db/schedule.db -it sprinkle-app
+```
 
+I specified port mapping with ```-p 8000:8000 ```, so the app inside the container listens on port 8000, making it accessible at ```http://localhost:8000``` on the client's local machine.
 
+To ensure that the time inside the container matches the client's local time, I've set the time zone to America/Los_Angeles using ```-e TZ=America/Los_Angeles```.
+
+Additionally, this command mounts the ```schedule.db``` file from my local machine to the ```/root/db/schedule.db``` file inside the container to provide data to the container.

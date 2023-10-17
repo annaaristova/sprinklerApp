@@ -52,6 +52,19 @@ main{
     height: 2em;
 }
 
+.runSprinkler{
+    width: 100px;
+    text-align: center;
+    border-color:#a1c6ea;
+    background-color: ghostwhite;
+    border-radius: 5px;
+    cursor: pointer;
+    border: solid;
+    border-width: 1.5px;
+    margin-left: 15px;
+    height: 2em;
+}
+
 #addDurationType{
     width: 100px;
     text-align: center;
