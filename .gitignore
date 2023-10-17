@@ -1,0 +1,10 @@
+# Covers files to be ignored
+
+/node_modules
+
+/.vscode
+
+/serial_port
+
+/microcontroller/sketch_aug19a
+
