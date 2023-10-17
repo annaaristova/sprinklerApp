@@ -1,12 +1,17 @@
 # Covers files to be ignored
 
+# ignore node_modules directory
 node_modules/
 
+# ignore .vscode directory
 .vscode/
 
-serial_port/
+# ignore serial_port directory
+serial_port
 
+# ignore sketch_aug19a directory
 microcontroller/sketch_aug19a/
 
-server/db/schedule.db/
+# ignore schedule.db
+server/db/schedule.db
 
