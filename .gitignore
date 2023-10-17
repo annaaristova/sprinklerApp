@@ -1,11 +1,11 @@
 # Covers files to be ignored
 
-/node_modules/
+node_modules/
 
-/.vscode/
+.vscode/
 
-/serial_port/
+serial_port/
 
-/microcontroller/sketch_aug19a/
+microcontroller/sketch_aug19a/
 
-/server/db/schedule.db/
+server/db/schedule.db/
