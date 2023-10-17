@@ -78,6 +78,34 @@ main{
     padding-top: 6px;    
 }
 
+#startSprinkler{
+    display: flex;
+    flex-wrap: nowrap;
+    margin-top: 60px;
+    margin-left: 22%;
+    text-align: center;
+}
+
+#startBtnLb{
+    font-size: 19px;
+    padding-top: 4px;
+}
+
+#startBtn{
+    display: block;
+    width: 90px;
+    border-color: #1d3461;
+    border: solid;
+    cursor: pointer;
+    background-color: ghostwhite;
+    border-radius: 5px;
+    border-width: 1.5px;
+    font-size: 15px;
+    padding-bottom: 6px;
+    padding-top: 6px;  
+    margin-left: 20px;
+}
+
 .deleteButton{
     display: block;
     width: 20px; 
@@ -93,13 +121,13 @@ main{
     height: 23px;
 }
 
-#submitTime:hover, .addTimeType:hover{
+#submitTime:hover, .addTimeType:hover, #startBtn:hover{
     background-color:#ddecf8;
 }
 
 #timeTable{
     display: block;
-    margin-top: 7%;
+    margin-top: 5%;
     margin-left: 21%;
     border-collapse: collapse;
     margin-bottom: 135px;

@@ -25,8 +25,27 @@
                         </form>
                     </div>
                 </div>
+
+                <div id="startSprinkler">
+                    <label for="startSprinkler" id="startBtnLb">Run the sprinkler for 10 seconds</label>
+                    <button id="startBtn">Start</button> 
+                </div>
                 
                 <script>
+
+                    $(document).ready(function(){
+                        $("#startBtn").on("click", function(){
+                            $.post("/start_sprinkler", function(data){
+                                alert(data);
+                            });
+                        });
+                    });
+
+                    // Attach a delete handler to the form
+                    // Wait until the page DOM is uploaded
+                    $(document).ready(function(){
+                        $(".deleteButton").on("click", deleteButtonOnClick);
+                    });
 
                     var deleteButtonOnClick = function() {
                             
@@ -64,48 +83,54 @@
                             duration = $addNewRowForm.find( "input[type='number']" ).val()
                             url = "/add_time_to_table";
 
-                            // Send the data using POST request
-                            $.post( url, { time : time, duration : duration}, 
-                                function(data, status, jqXHR){
-                                if (status == "success") {
+                            if (time == "" || duration== ""){
+                                alert("Enter the time and duration");
+                            }
+                            else{
+                                // Send the data using POST request
+                                $.post( url, { time : time, duration : duration}, 
+                                    function(data, status, jqXHR){
+                                    if (status == "success") {
 
-                                    // Add a new row 
-                                    var tableRef = document.getElementById("timeTable");
-                                    var newRow = tableRef.insertRow(-1);
-                                    var timeCell = newRow.insertCell(0);
-                                    var durationCell = newRow.insertCell(1);
-                                    var deleteCell = newRow.insertCell(2);
+                                        // Add a new row 
+                                        var tableRef = document.getElementById("timeTable");
+                                        var newRow = tableRef.insertRow(1);
+                                        var timeCell = newRow.insertCell(0);
+                                        var durationCell = newRow.insertCell(1);
+                                        var deleteCell = newRow.insertCell(2);
 
-                                    var imgIdFirstPart = "buttonId-";
+                                        var imgIdFirstPart = "buttonId-";
 
-                                    // Retrieve the row id from the POST response body
-                                    var imgId = imgIdFirstPart.concat(data);
+                                        // Retrieve the row id from the POST response body
+                                        var imgId = imgIdFirstPart.concat(data);
 
-                                    // Add the row id to the id attribute 
-                                    const deleteButton = "<img src='images/delete.png' alt='Delete' class='deleteButton' id='" + imgId + "'>";
-                                    
-                                    // Add time and duration values along with the delete button to the table
-                                    timeCell.innerHTML = time;
-                                    durationCell.innerHTML = duration;
-                                    deleteCell.innerHTML = deleteButton;
+                                        // Add the row id to the id attribute 
+                                        const deleteButton = "<img src='images/delete.png' alt='Delete' class='deleteButton' id='" + imgId + "'>";
+                                        
+                                        // Add time and duration values along with the delete button to the table
+                                        timeCell.innerHTML = time;
+                                        durationCell.innerHTML = duration;
+                                        deleteCell.innerHTML = deleteButton;
 
-                                    // To make it possible to delete just added row without reloading the web-page 
-                                    // the delete button is assigned a click event handler
-                                    $("#" + imgId).on("click", deleteButtonOnClick);
-                                }
-                                else {
-                                    alert("An Error Occurred");
-                                }
-                            });
+                                        // To make it possible to delete just added row without reloading the web-page 
+                                        // the delete button is assigned a click event handler
+                                        $("#" + imgId).on("click", deleteButtonOnClick);
+                                    }
+                                    else {
+                                        alert("An Error Occurred");
+                                    }
+                                });
+                            }
                         });
                     });
 
-                    // Attach a delete handler to the form
-                    // Wait until the page DOM is uploaded
-                    $(document).ready(function(){
-                        $(".deleteButton").on("click", deleteButtonOnClick);
+                    $(document).ready(function() {
+                        $("tbody").each(function(elem,index){
+                        var arr = $.makeArray($("tr",this).detach());
+                        arr.reverse();
+                        $(this).append(arr);
+                        });
                     });
-
                 </script>
                 
                 <div id="tableContainer">
@@ -115,15 +140,17 @@
                             <th>Duration</th>
                             <th>Delete</th>
                         </tr>
-                        <% timeAndDuration.forEach(function (item, i) {%>
-                        <tr>
-                            <td> <%=item.time%> </td>
-                            <td> <%=item.duration%> </td>
-                            <td>
-                                <img src="images/delete.png" alt="Delete" class="deleteButton" id="buttonId-<%=item.index%>">
-                            </td>
-                        </tr>
-                        <%});%>
+                        <tbody>
+                            <% timeAndDuration.forEach(function (item, i) {%>
+                            <tr>
+                                <td> <%=item.time%> </td>
+                                <td> <%=item.duration%> </td>
+                                <td>
+                                    <img src="images/delete.png" alt="Delete" class="deleteButton" id="buttonId-<%=item.index%>">
+                                </td>
+                            </tr>
+                            <%});%>
+                        </tbody>
                     </table>     
                 </div>
 
