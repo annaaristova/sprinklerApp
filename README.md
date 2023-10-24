@@ -2,17 +2,23 @@
 
 I developed this project to automate the process of watering the plants on my balcony. It ensures an even watering process and eliminating concerns about missing plant care. 
 
+The user can set the watering schedule by selecting the time and duration for the sprinkler through the web interface. The chosen time is stored in the database. When the current time matches any scheduled time, the corresponding duration is transmitted via Bluetooth to the Arduino Nano. The Arduino Nano then activates one of its legs in a high state and sends a signal to the transistor, which, in turn, supplies voltage to the pump.
+
 # System structure 
 
-The system consists of eight parts, each described in detail below. A simplified structure is illustrated in the picture below:
+The system consists of eight parts, each described in detail below. A simplified structure is illustrated in the pictures below:
 
 ![Alt text](image-4.png)
+
+![Alt text](photo.png)
 
 ### Solar Charger Power Bank
 
 For my balcony plant sprinkler, I use a Solar Charger Power Bank that can be charged via solar energy. The power bank has a USB port, which I use to connect to the Voltage Regulator and supply it with 5V.
 
 Link to the Solar Charger Power Bank: https://www.amazon.com/dp/B0BMLF8V7G
+
+One of the issues I had to deal with was that the solar charger power bank works for only 45 seconds if nothing consumes its energy. I addressed this issue by adding new functionality into the microcontroller's code. The Arduino Nano should send a 1-millisecond signal every 40 seconds to the transistor, ensuring that the power bank stays on all the time. 
 
 ### Voltage Regulator
 
@@ -54,7 +60,9 @@ Link to Bluetooth Adapter: https://www.amazon.com/dp/B07V1SZCY6
 
 #### Web UI: 
 
-To simplify the process of adding or deleting watering schedules, I created a web-based user interface (UI) where users can add the watering times and durations into a table or delete them. All data is stored in a database that the program checks every minute. If the current time matches any time in the database, the watering duration is split into two bytes and sent via the `serial_port` file to a virtual COM Port associated with the Bluetooth Adapter.
+To simplify the process of adding or deleting watering schedules, I created a web-based user interface (UI) where users can add the watering times and durations into a table or delete them. All data is stored in a database that the program checks every 5 seconds. If the current time matches any time in the database, the watering duration is split into two bytes and sent via the `serial_port` file to a virtual COM Port associated with the Bluetooth Adapter.
+
+To address the issue of potential delays that could cause the app to miss the scheduled watering time, I introduced a 'day' column to the database table. The program checks the table every 5 seconds, and if the 'day' does not match the current day, the sprinkler begins watering.
 
 #### Docker Container:
 

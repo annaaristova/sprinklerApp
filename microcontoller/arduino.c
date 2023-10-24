@@ -3,6 +3,8 @@
 
 #define BAUD_RATE 9600
 
+#define BYTE_RECEIVED ((UCSR0A & (1 << RXC0)) == (1 << RXC0))
+
 void UART_Init(long int baudRate){
 
   //set UCSR0A register bits to 0
@@ -28,32 +30,57 @@ int main(){
   DDRB |= (1 << 5);
   UART_Init(BAUD_RATE); 
 
+  unsigned int PwbnkOn = 0;
+  unsigned int pumpRunTimer;
+  int bytes[2];
+  int PumpRun = 0;
+  int byteTimeOut = 0; 
+  int index = 0;
+
   while(1){
-    //wait for the first byte
-    while((UCSR0A & (1 << RXC0)) != (1 << RXC0));
-    //read less significant byte from the buffer
-    int lsb = UDR0; 
+    _delay_ms(1);
 
-    //use delay to wait for the second byte
-    _delay_ms(50);
+    PwbnkOn++;
 
-    //if the second byte is not received during the 50-millisecond delay,
-    //dismiss the first byte and return to the beginning of the loop
-    if((UCSR0A & (1 << RXC0)) != (1 << RXC0)){
-      continue;
-    };
-    //read most significant byte from the buffer
-    int msb = UDR0; 
-    
-    //recreate the number
-    unsigned int duration = msb << 8 | lsb;
-
-    PORTB |= (1 << 5);
-    for (int i=0; i < duration; i++){
-      _delay_ms(1);
+    if (PwbnkOn == 40000){
+      PORTB |= (1 << 5);
     }
-    PORTB &= ~(1 << 5);
 
+    if (PwbnkOn == 40001){
+      PORTB &= ~(1 << 5);
+      PwbnkOn = 0;
+    }
+
+    if (BYTE_RECEIVED){
+      if(index == 2){
+        index = 0;
+        PORTB &= ~(1 << 5);
+        PumpRun = 0;
+      }
+      bytes[index] = UDR0;
+      index++;
+    }
+
+    if (index == 1){
+      byteTimeOut++;
+    }
+
+    if (index == 1 && byteTimeOut == 50){
+      index = 0;
+      byteTimeOut = 0;
+    }
+
+    if (index == 2){
+      pumpRunTimer = bytes[1] << 8 | bytes[0];
+      PORTB |= (1 << 5);
+      PumpRun++;
+    }
+
+    if (PumpRun == pumpRunTimer){
+        PORTB &= ~(1 << 5);
+        PumpRun = 0;
+        index = 0;
+    }
   }
   return 0;
 }
