@@ -6,6 +6,12 @@ body, header, main, footer {
     border: 0;
 }
 
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
 #container{
     font-family:'Times New Roman', Times, serif;
 }
@@ -13,99 +19,19 @@ body, header, main, footer {
 header{
     background-color: #a1c6ea;
     width: auto;
-    height: 100px;
     text-align: center;
+    height: 95px;
     padding-top: 1px;
 }
 
 header h1{
-    padding-top: 10px;
     font-size: 30px;
+    padding-top: 10px;
+    padding-bottom: 20px;
 }
 
-main{
-    background-color:white;
-    width: auto;
-}
-
-#timeTagWrapper{
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: space-between;
-    margin-top: 60px;
-    margin-left: 22%;
-}
-
-.addTimeLabel{
-    font-size: 19px;
-    margin-right: 8px;
-}
-
-.addTimeType{
-    border-color:#a1c6ea;
-    background-color: ghostwhite;
-    border-radius: 5px;
-    cursor: pointer;
-    border: solid;
-    border-width: 1.5px;
-    margin-right: 13px;
-    height: 2em;
-}
-
-.runSprinkler{
-    width: 100px;
-    text-align: center;
-    border-color:#a1c6ea;
-    background-color: ghostwhite;
-    border-radius: 5px;
-    cursor: pointer;
-    border: solid;
-    border-width: 1.5px;
-    margin-left: 15px;
-    height: 2em;
-}
-
-#addDurationType{
-    width: 100px;
-    text-align: center;
-}
-
-#addTimeType{
-    width: 130px;
-    text-align: center;
-}
-
-#submitTime{
-    float: right;
-    display: block;
-    width: 90px;
-    border-color: #1d3461;
-    border: solid;
-    cursor: pointer;
-    background-color: ghostwhite;
-    border-radius: 5px;
-    border-width: 1.5px;
-    font-size: 15px;
-    margin-left: 8px;
-    padding-bottom: 6px;
-    padding-top: 6px;    
-}
-
-#startSprinkler{
-    display: flex;
-    flex-wrap: nowrap;
-    margin-top: 60px;
-    margin-left: 22%;
-    text-align: center;
-}
-
-#startBtnLb{
-    font-size: 19px;
-    padding-top: 4px;
-}
 
 #startBtn{
-    display: block;
     width: 90px;
     border-color: #1d3461;
     border: solid;
@@ -116,17 +42,85 @@ main{
     font-size: 15px;
     padding-bottom: 6px;
     padding-top: 6px;  
-    margin-left: 20px;
+}
+
+#startSprinkler{
+    margin-top: 5%;
+    margin-left: 22%;
+    margin-bottom: 5%;
+}
+
+#startSprinkler label, .timeLabel{
+    font-size: 20px;
+    margin-right: 2%;
+}
+
+#startSprinkler input{
+    width: 100px;
+    text-align: center;
+    border-color:#a1c6ea;
+    background-color: ghostwhite;
+    border-radius: 5px;
+    cursor: pointer;
+    border: solid;
+    border-width: 1.5px;
+    height: 26px;
+    margin-right: 2%;
+}
+
+#timeTagWrapper{
+    margin-top: 2%;
+    margin-left: 22%;
+}
+
+#addTime{
+    width: 130px;
+    text-align: center;
+}
+
+#addDuration{
+    width: 100px;
+    text-align: center;
+}
+
+.timeDurationInput{
+    border-color:#a1c6ea;
+    background-color: ghostwhite;
+    border-radius: 5px;
+    cursor: pointer;
+    border: solid;
+    border-width: 1.5px;
+    height: 26px;
+    margin-right: 2%;
 }
 
 .deleteButton{
-    display: block;
     width: 20px; 
     border: none;
     cursor: pointer;
     height: 20px;
     background-color: transparent;
-    padding-left: 110px;
+    margin-top: 2%;
+}
+
+#message, #error{
+    margin-left: 22%;
+    color: rgb(193, 11, 11);
+    font-size: 20px;
+    margin-top: 2%;
+}
+
+footer{
+    width: auto;
+    height: 80px;
+    background-color: #507dbc;
+    text-align: center;
+    margin-top: auto;
+}
+
+footer p{
+    font-size: 20px;
+    padding-top: 10px;
 }
 
 .deleteButton:hover{
@@ -138,40 +132,6 @@ main{
     background-color:#ddecf8;
 }
 
-#timeTable{
-    display: block;
-    margin-top: 5%;
-    margin-left: 21%;
-    border-collapse: collapse;
-    margin-bottom: 135px;
-}
-
-#timeTable th{
-    text-align: center;
-    background-color: #b0d2ed;
-    font-size: 19px;
-}
-
-#timeTable tr{
-    font-size: 18px;
-    text-align: center;
-    padding-top: 13px;
-    padding-bottom: 13px;
-}
-
-#timeTable th{
-    height: 60px;
-}
-
-#timeTable tr {
-    height: 45px;
-}
-
-#timeTable tr, #timeTable th{
-    padding-left: 95px;
-    padding-right: 95px;
-}
-
 #timeTable tr:nth-child(odd){
     background-color: #dbe8f2;
 }
@@ -180,15 +140,110 @@ main{
     background-color: #afc6d4;
 }
 
-footer{
-    width: auto;
-    height: 80px;
-    background-color: #507dbc;
-    text-align: center;
-    padding-bottom: 4px;
+#submitTime{
+    width: 90px;
+    border-color: #1d3461;
+    border: solid;
+    cursor: pointer;
+    background-color: ghostwhite;
+    border-radius: 5px;
+    border-width: 1.5px;
+    font-size: 15px;
+    padding-bottom: 6px;
+    padding-top: 6px;    
 }
 
-footer p{
-    font-size: 20px;
-    padding-top: 25px;
+#tableTitle{
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+#addTimeBlockOne, #addTimeBlockTwo{
+    margin-bottom: 2%;
+    margin-top: 2%;
+}
+
+#timeTable{
+    margin-left: 21%;
+    border-collapse: collapse;
+    margin-bottom: 10%;
+    width: 60%;
+}
+
+#timeTable th{
+    text-align: center;
+    background-color: #b0d2ed;
+    font-size: 19px;
+    height: 50px;
+}
+
+#timeTable tr{
+    font-size: 17px;
+    text-align: center;
+    height: 40px;
+}
+
+/* Responsive styles for smaller screens */
+@media screen and (max-width: 768px){
+
+    header h1{
+        font-size: 25px;
+    }
+
+    header{
+        height: 80px;
+        text-align: center;
+    }
+
+    #startSprinkler{
+        margin-top: 10%;
+        margin-left: 5%;
+        margin-bottom: 10%;
+    }
+
+    #message, #error{
+        margin-left: 5%;
+        font-size: 20px;
+    }
+
+    #timeTagWrapper{
+        margin-top: 10%;
+        margin-left: 5%;
+    }
+
+    #addTimeBlockOne, #addTimeBlockTwo{
+        margin-bottom: 10%;
+        margin-top: 10%;
+    }
+
+    #timeTable{
+        margin-left: 4%;
+        width: 90%;
+    }
+
+}
+
+/* Responsive styles for smaller screens */
+@media screen and (max-width: 480px){
+
+    #startBtn{
+        width: 70px;
+        font-size: 15px; 
+    }
+
+    #startSprinkler input{
+        width: 80px;
+        height: 26px;
+    }
+
+    #timeTable th{
+        font-size: 17px;
+    }
+
+    #timeLabelTwo{
+        display: block;
+        margin-bottom: 5%;
+    }
+
 }
