@@ -4,7 +4,7 @@ OBJS=arduino.o
 MCU=atmega328p
 CC=avr-gcc
 OBJCOPY=avr-objcopy
-CFLAGS=-Os -DF_CPU=16000000UL -mmcu=${MCU}
+CFLAGS=-Os -DF_CPU=1000000UL -mmcu=${MCU}
 PORT=/dev/ttyS3
 
 

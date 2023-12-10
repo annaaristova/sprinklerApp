@@ -27,7 +27,12 @@ void UART_Init(long int baudRate){
 
 int main(){
 
-  DDRB |= (1 << 5);
+  //set CLKPCE (the 8th bit) in the CLKPR register to 1 to modify the frequency of the microcontroller
+  //set CLKPS2 (the 3rd bit) in CLKPR register to 1 to decrease the frequency of the microcontroller to 1 MHz 
+  //https://bletvaska.gitbooks.io/advanced-iot-applications/content/en/chapter-2/clock.frequency.html
+  CLKPR |= (1 << 7) | (1 << 2);
+
+  DDRB |= (1 << 3) | (1 << 4);
   UART_Init(BAUD_RATE); 
 
   unsigned int PwbnkOn = 0;
@@ -43,18 +48,19 @@ int main(){
     PwbnkOn++;
 
     if (PwbnkOn == 40000){
-      PORTB |= (1 << 5);
+      PORTB |= (1 << 3);
     }
 
     if (PwbnkOn == 40001){
-      PORTB &= ~(1 << 5);
+      PORTB &= ~(1 << 3);
       PwbnkOn = 0;
     }
 
     if (BYTE_RECEIVED){
       if(index == 2){
         index = 0;
-        PORTB &= ~(1 << 5);
+        PORTB &= ~(1 << 3);
+        PORTB &= ~(1 << 4);
         PumpRun = 0;
       }
       bytes[index] = UDR0;
@@ -72,12 +78,14 @@ int main(){
 
     if (index == 2){
       pumpRunTimer = bytes[1] << 8 | bytes[0];
-      PORTB |= (1 << 5);
+      PORTB |= (1 << 3);
+      PORTB |= (1 << 4);
       PumpRun++;
     }
 
     if (PumpRun == pumpRunTimer){
-        PORTB &= ~(1 << 5);
+        PORTB &= ~(1 << 3);
+        PORTB &= ~(1 << 4);
         PumpRun = 0;
         index = 0;
     }
