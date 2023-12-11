@@ -27,11 +27,6 @@ void UART_Init(long int baudRate){
 
 int main(){
 
-  //set CLKPCE (the 8th bit) in the CLKPR register to 1 to modify the frequency of the microcontroller
-  //set CLKPS2 (the 3rd bit) in CLKPR register to 1 to decrease the frequency of the microcontroller to 1 MHz 
-  //https://bletvaska.gitbooks.io/advanced-iot-applications/content/en/chapter-2/clock.frequency.html
-  CLKPR |= (1 << 7) | (1 << 2);
-
   DDRB |= (1 << 3) | (1 << 4);
   UART_Init(BAUD_RATE); 
 
