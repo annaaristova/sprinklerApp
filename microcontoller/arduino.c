@@ -27,11 +27,13 @@ void UART_Init(long int baudRate){
 
 int main(){
 
-  //set CLKPCE (the 8th bit) in the CLKPR register to 1 to modify the frequency of the microcontroller
-  //set CLKPS2 (the 3rd bit) in CLKPR register to 1 to decrease the frequency of the microcontroller to 1 MHz 
+  //set CLKPR in CLKPR register to 1 and the rest bits to 0
+  //set CLKPS2 to 1 to decrease the frequency of the microcontroller to 1 MHz 
   //https://bletvaska.gitbooks.io/advanced-iot-applications/content/en/chapter-2/clock.frequency.html
-  CLKPR |= (1 << 7) | (1 << 2);
+  CLKPR = (1 << CLKPCE);
+  CLKPR = (1 << CLKPS2);
 
+  //set PB3 (pump) and PB4 (conv en/dis) to 1 (output state) 
   DDRB |= (1 << 3) | (1 << 4);
   UART_Init(BAUD_RATE); 
 
@@ -44,18 +46,22 @@ int main(){
 
   while(1){
     _delay_ms(1);
-
+    
+    //count milliseconds to send a signal every 40000 so the powerbank stays active
     PwbnkOn++;
 
     if (PwbnkOn == 40000){
+      //use PORTB to set the pin into the high state
       PORTB |= (1 << 3);
     }
 
     if (PwbnkOn == 40001){
+      //use PORTB to set the pin into the low state
       PORTB &= ~(1 << 3);
       PwbnkOn = 0;
     }
 
+    
     if (BYTE_RECEIVED){
       if(index == 2){
         index = 0;
@@ -71,6 +77,7 @@ int main(){
       byteTimeOut++;
     }
 
+    //if the second byte was received in 50mls set the index to 0 
     if (index == 1 && byteTimeOut == 50){
       index = 0;
       byteTimeOut = 0;
