@@ -60,7 +60,10 @@ Link to Bluetooth Adapter: https://www.amazon.com/dp/B07V1SZCY6
 
 #### Web UI: 
 
-To simplify the process of adding or deleting watering schedules, I created a web-based user interface (UI) where users can add the watering times and durations into a table or delete them. All data is stored in a database that the program checks every 5 seconds. If the current time matches any time in the database, the watering duration is split into two bytes and sent via the `serial_port` file to a virtual COM Port associated with the Bluetooth Adapter.
+To simplify the process of adding or deleting watering schedules, I created a web-based user interface (UI) where users can add the watering times and durations into a table or delete them.
+<img width="945" alt="chrome_hqKGG7Y6JK" src="https://github.com/annaaristova/sprinklerApp/assets/117958582/94a12f12-076f-4c32-a5e6-15047c0e2326">
+
+All data is stored in a database that the program checks every 5 seconds. If the current time matches any time in the database, the watering duration is split into two bytes and sent via the `serial_port` file to a virtual COM Port associated with the Bluetooth Adapter.
 
 To address the issue of potential delays that could cause the app to miss the scheduled watering time, I introduced a 'day' column to the database table. The program checks the table every 5 seconds, and if the 'day' does not match the current day, the sprinkler begins watering.
 
