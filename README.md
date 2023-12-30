@@ -1,6 +1,6 @@
 # Introduction
 
-I developed this project to automate the process of watering the plants on my balcony. It ensures an even watering process and eliminating concerns about missing plant care. 
+I developed this project to automate the process of watering the plants on my balcony. It ensures an even watering process and eliminates concerns about missing plant care. 
 
 The user can set the watering schedule by selecting the time and duration for the sprinkler through the web interface. The chosen time is stored in the database. When the current time matches any scheduled time, the corresponding duration is transmitted via Bluetooth to the Arduino Nano. The Arduino Nano then activates one of its legs in a high state and sends a signal to the transistor, which, in turn, supplies voltage to the pump.
 
@@ -61,7 +61,7 @@ Link to Bluetooth Adapter: https://www.amazon.com/dp/B07V1SZCY6
 #### Web UI: 
 
 To simplify the process of adding or deleting watering schedules, I created a web-based user interface (UI) where users can add the watering times and durations into a table or delete them.
-<img width="945" alt="chrome_hqKGG7Y6JK" src="https://github.com/annaaristova/sprinklerApp/assets/117958582/94a12f12-076f-4c32-a5e6-15047c0e2326">
+<img width="784" alt="chrome_U6bBRHQyYX" src="https://github.com/annaaristova/sprinklerApp/assets/117958582/083a3ad3-096e-4e56-8ef0-7515807ba866">
 
 All data is stored in a database that the program checks every 5 seconds. If the current time matches any time in the database, the watering duration is split into two bytes and sent via the `serial_port` file to a virtual COM Port associated with the Bluetooth Adapter.
 
